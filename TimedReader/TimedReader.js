@@ -1,46 +1,58 @@
 const fs = require("fs");
-const dayjs = require ("dayjs");
+const dayjs = require("dayjs");
 const readline = require('readline');
-
-let data = require("./myjson.json");
-
-fs.readFile("./myjson.json", (err) => {
-  if (err){
-    console.log ("Error reading the file", err);
-  }
-})
-
+const data = require("./myjson.json");
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-rl.question('Which ID are you looking for? ', (answer) => {
-  for(let i = 0; i < data.content.LinkInfos.length; i++){
-    if (answer == (data.content.LinkInfos[i].Id)){
-        rl.question('What information do you need? ', (answer) => {
-            if (answer.toLowerCase() == 'all'){
-                getData(i);
-                rl.close();
-            }else if (answer.includes("Starting")){
-                answer.toString() - "Starting";
-                console.log(answer.toString(),":", data.content.LinkInfos[i].Starting[answer]);
-                rl.close();
-            }else if (answer.includes("Ending")){
-                answer.toString() - "Ending";
-                console.log(answer.toString(), ":", data.content.LinkInfos[i].Ending[answer]);
-                rl.close();
-                }else{
-                console.log(answer.toString(),":", data.content.LinkInfos[i][answer]);
-                rl.close();
-
-            }
-        })
-    }
+fs.readFile("./myjson.json", (err) => {
+  if (err) {
+    console.log("Error reading the file", err);
   }
-});
+  console.log("No error reading the file!");
+  rl.question('Which ID are you looking for? ', (answer) => {
+    for (let i = 0; i < data.content.LinkInfos.length; i++) {
+      if (answer == (data.content.LinkInfos[i].Id)) { //Search for Id within data
+        rl.question('What information do you need? ', (answer) => {
+          if (answer.toLowerCase() == 'all') { //Print all info related to Id
+            getData(i);
+            rl.close();
+          } else if (answer.includes("Starting")) { //Print selected data starting with "Starting"
+            answer.toString() - "Starting";
+            console.log(answer.toString(), ":", data.content.LinkInfos[i].Starting[answer]);
+            rl.close();
+          } else if (answer.includes("Ending")) { //Print selected data starting with "Ending"
+            answer.toString() - "Ending";
+            console.log(answer.toString(), ":", data.content.LinkInfos[i].Ending[answer]);
+            rl.close();
+          } else { //Print only the info requested
+            console.log(answer.toString(), ":", data.content.LinkInfos[i][answer]);
+            rl.close();
+          }
+        })
+      } else if (answer.toLowerCase() == "all") { //Print info for all data (long process not recommended)
+        for (let i = 0; i < data.content.LinkInfos.length; i++) {
+          getData(i);
+        }
+      }
+    }
+    let bol = 1;
+    for (let i = 0; i < data.content.LinkInfos.length; i++) { //Check through data if Id exist
+      if (answer == (data.content.LinkInfos[i].Id)) { //Set bol to true if Id exist 
+        bol = 2;
+      }
+    }
+    if (bol == 1) { //If Id doesn't exist
+      console.log("Id not found");
+      rl.close();
+    }
 
-function getData (input){
+  });
+})
+
+function getData(input) {
   console.log("Time Stamp:", dayjs(data.content.LinkInfos[input].TimeStamp).format('MM/DD/YYYY'));
   console.log("Time Id:", data.content.LinkInfos[input].TIMEDId);
   console.log("Name:", data.content.LinkInfos[input].Name);
@@ -69,5 +81,3 @@ function getData (input){
   console.log("Ending Reader Name:", data.content.LinkInfos[input].Ending.EndingReaderName);
   console.log("Ending Open Reach Facility Id:", data.content.LinkInfos[input].Ending.EndingOpenReachFacilityId);
 }
-
-
