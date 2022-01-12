@@ -1,0 +1,17 @@
+{
+  "name": "timedreader",
+  "version": "1.0.0",
+  "main": "helloworld.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tony",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.10.7",
+    "nodejs": "^0.0.0",
+    "request": "^2.88.2",
+    "xml2js": "^0.4.23"
+  },
+  "description": "hello world"
+}
